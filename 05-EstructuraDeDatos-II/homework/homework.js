@@ -79,7 +79,7 @@ class Node {
 
 /* EJERCICIO 2
 Implementar la clase HashTable.
-Nuetra tabla hash, internamente, consta de un arreglo de buckets (slots, contenedores, o casilleros; es decir, posiciones posibles para almacenar la información), donde guardaremos datos en formato clave-valor (por ejemplo, {instructora: 'Ani'}).
+Nuestra tabla hash, internamente, consta de un arreglo de buckets (slots, contenedores, o casilleros; es decir, posiciones posibles para almacenar la información), donde guardaremos datos en formato clave-valor (por ejemplo, {instructora: 'Ani'}).
 Para este ejercicio, la tabla debe tener 35 buckets (numBuckets = 35). (Luego de haber pasado todos los tests, a modo de ejercicio adicional, pueden modificar un poco la clase para que reciba la cantidad de buckets por parámetro al momento de ser instanciada.)
 
 La clase debe tener los siguientes métodos:
@@ -95,29 +95,41 @@ class HashTable {
     this.numBuckets = 35;
     this.buckets = new Array(this.numBuckets);
   }
+
   hash(key) {
+    if (typeof key !== "string") {
+      throw Error("Error");
+    }
     let total = 0;
     for (let i = 0; i < key.length; i++) {
       total += key.charCodeAt(i);
     }
-    return total % this.numBuckets;
+    let indice = total % this.numBuckets;
+    return indice;
   }
+
   set(key, value) {
-    const index = this.hash(key);
-    if (!this.buckets[index]) {
-      this.buckets[index] = [];
+    if (typeof key !== "string") {
+      throw Error("Error");
     }
-    this.buckets[index].push({ key, value });
+    const indice = this.hash(key);
+    if (!this.buckets[indice]) {
+      this.buckets[indice] = [];
+    }
+    this.buckets[indice].push({ key, value });
   }
 
   get(key) {
-    const index = this.hash(key);
-    if (!this.buckets[index]) {
+    if (typeof key !== "string") {
+      throw Error("Error");
+    }
+    const indice = this.hash(key);
+    if (!this.buckets[indice]) {
       return undefined;
     }
-    for (let i = 0; i < this.buckets[index].length; i++) {
-      if (this.buckets[index][i].key === key) {
-        return this.buckets[index][i].value;
+    for (let i = 0; i < this.buckets[indice].length; i++) {
+      if (this.buckets[indice][i].key === key) {
+        return this.buckets[indice][i].value;
       }
     }
 
@@ -125,13 +137,16 @@ class HashTable {
   }
 
   hasKey(key) {
-    const index = this.hash(key);
-    if (!this.buckets[index]) {
+    if (typeof key !== "string") {
+      throw Error("Error");
+    }
+    const indice = this.hash(key);
+    if (!this.buckets[indice]) {
       return false;
     }
 
-    for (let i = 0; i < this.buckets[index].length; i++) {
-      if (this.buckets[index][i].key === key) {
+    for (let i = 0; i < this.buckets[indice].length; i++) {
+      if (this.buckets[indice][i].key === key) {
         return true;
       }
     }
