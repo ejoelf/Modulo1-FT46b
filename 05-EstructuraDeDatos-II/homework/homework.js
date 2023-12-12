@@ -28,44 +28,35 @@ class LinkedList {
     current.next = node;
     return node;
   }
+
   remove() {
     let current = this.head;
 
-    if (!current) {
-      return null;
-    } else if (!current.next) {
-      let eliminarValue = this.head.value;
-      this.head = null;
-      return eliminarValue;
-    } else {
-      let ultimo = null;
+    if (!current) return null;
 
-      while (current.next) {
-        ultimo = current;
-        current = current.next;
-      }
-      ultimo.next = null;
+    if (!current.next) {
+      this.head = null;
       return current.value;
     }
+    while (current.next.next) {
+      current = current.next;
+    }
+    let ultimoValor = current.next.value;
+    current.next = null;
+    return ultimoValor;
   }
+
   search(arg) {
     let current = this.head;
 
-    if (typeof arg === "string") {
-      while (current) {
-        if (current.value === arg) {
-          return current.value;
-        }
-        current = current.next;
-      }
-    } else {
-      while (current) {
-        if (arg(current.value)) {
-          return current.value;
-        }
-        current = current.next;
-      }
+    while (current) {
+      if (typeof arg !== "function") {
+        if (current.value === arg) return current.value;
+      } else if (arg(current.value)) return current.value;
+
+      current = current.next;
     }
+
     return null;
   }
 }
@@ -93,14 +84,12 @@ Ejemplo: supongamos que quiero guardar {instructora: 'Ani'} en la tabla. Primero
 class HashTable {
   constructor() {
     this.numBuckets = 35;
-    this.buckets = new Array(this.numBuckets);
+    this.buckets = [];
   }
 
   hash(key) {
-    if (typeof key !== "string") {
-      throw Error("Error");
-    }
     let total = 0;
+
     for (let i = 0; i < key.length; i++) {
       total += key.charCodeAt(i);
     }
@@ -109,48 +98,23 @@ class HashTable {
   }
 
   set(key, value) {
-    if (typeof key !== "string") {
-      throw Error("Error");
-    }
+    if (typeof key !== "string") throw TypeError("Keys must be strings");
+
     const indice = this.hash(key);
-    if (!this.buckets[indice]) {
-      this.buckets[indice] = [];
-    }
-    this.buckets[indice].push({ key, value });
+
+    if (!this.buckets[indice]) this.buckets[indice] = {};
+
+    this.buckets[indice][key] = value;
   }
 
   get(key) {
-    if (typeof key !== "string") {
-      throw Error("Error");
-    }
     const indice = this.hash(key);
-    if (!this.buckets[indice]) {
-      return undefined;
-    }
-    for (let i = 0; i < this.buckets[indice].length; i++) {
-      if (this.buckets[indice][i].key === key) {
-        return this.buckets[indice][i].value;
-      }
-    }
 
-    return undefined;
+    return this.buckets[indice][key];
   }
 
   hasKey(key) {
-    if (typeof key !== "string") {
-      throw Error("Error");
-    }
-    const indice = this.hash(key);
-    if (!this.buckets[indice]) {
-      return false;
-    }
-
-    for (let i = 0; i < this.buckets[indice].length; i++) {
-      if (this.buckets[indice][i].key === key) {
-        return true;
-      }
-    }
-
+    if (this.get(key)) return true;
     return false;
   }
 }
