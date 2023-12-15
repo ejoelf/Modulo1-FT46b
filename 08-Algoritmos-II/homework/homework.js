@@ -46,7 +46,7 @@ function mergeSort(array) {
     let ordenado = [];
 
     while (i < arr1.length && j < arr2.length) {
-      if (arr1[i] < arr2[i]) {
+      if (arr1[i] < arr2[j]) {
         ordenado.push(arr1[i]);
         i++;
       } else {
